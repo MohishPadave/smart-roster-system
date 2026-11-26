@@ -47,8 +47,9 @@ roaster/
     ├── docs/
     │   ├── README.md
     │   ├── QUICKSTART.md
-    │   └── DEPLOY.md                      # Step-by-step Render + Vercel deployment guide
+    │   └── DEPLOY.md                      # Step-by-step Vercel + Neon (no credit card) & Render guide
     ├── api/                               # Next.js API Server + Prisma + PostgreSQL (port 4000)
+    │   ├── vercel.json                    # Auto schema push + seed + Next.js build on Vercel
     │   ├── prisma/
     │   │   ├── schema.prisma              # 11 models (Pod, Employee, Brand, BrandProcessRule, EmployeeAllocation, LeaveRequest, HolidayCalendar, RosterVersion, ShiftEntry, User, PasswordResetToken)
     │   │   ├── seed.ts                    # Idempotent seed: 3 Pods, 35 Employees, 22 Brands (18/4), 4 Users
@@ -65,7 +66,9 @@ roaster/
     │
     └── solver-service/                    # Python FastAPI + Google OR-Tools CP-SAT (port 8001)
         ├── requirements.txt
-        ├── runtime.txt                    # python-3.11.11
+        ├── .python-version                # 3.12 (Vercel Python runtime)
+        ├── vercel.json                    # 60s maxDuration for CP-SAT solver routes
+        ├── runtime.txt                    # python-3.11.11 (Render)
         ├── app/
         │   ├── main.py                    # GET /health, POST /solve, POST /reoptimize, POST /audit/spof
         │   ├── models.py                  # Pydantic v2 schemas
@@ -160,11 +163,13 @@ Open **http://127.0.0.1:3000** (or `http://localhost:3000`) and sign in with the
 
 ---
 
-## Cloud Deployment (Vercel + Render)
+## Cloud Deployment (100% Free on Vercel + Neon — No Credit Card)
 
-See **[DEPLOY.md](./DEPLOY.md)** for full instructions:
-- **Backend (`backend/`) on Render**: Use [render.yaml](../render.yaml) to deploy PostgreSQL + `roster-solver` (`backend/solver-service`) + `roster-api` (`backend/api`).
-- **Frontend (`frontend/`) on Vercel**: Set Root Directory to `frontend` and configure `BACKEND_API_URL` + matching `AUTH_SECRET`.
+See **[DEPLOY.md](./DEPLOY.md)** for full step-by-step instructions:
+- **PostgreSQL (`neon.tech`)**: Free managed Postgres without a credit card.
+- **Python Solver (`backend/solver-service`) on Vercel**: Root Directory `backend/solver-service` (`app/main.py` + `requirements.txt` + `vercel.json`).
+- **Backend API (`backend/api`) on Vercel**: Root Directory `backend/api` (`DATABASE_URL`, `SOLVER_URL`, `AUTH_SECRET`, `COOKIE_SECURE=true`).
+- **Frontend (`frontend/`) on Vercel**: Root Directory `frontend` (`BACKEND_API_URL`, matching `AUTH_SECRET`).
 
 ---
 

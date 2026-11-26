@@ -24,7 +24,7 @@ import {
   ShiftCode,
 } from '@/types/roster';
 
-const SOLVER_URL = process.env.SOLVER_URL || 'http://127.0.0.1:8001';
+const SOLVER_URL = (process.env.SOLVER_URL || 'http://127.0.0.1:8001').replace(/\/+$/, '');
 
 /**
  * Load all active entities from Prisma for solver requests

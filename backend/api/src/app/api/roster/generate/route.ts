@@ -11,6 +11,8 @@ import { prisma } from '@/lib/prisma';
 import { loadSolverData, callSolve, callSpofAudit } from '@/lib/solver-client';
 import { ShiftCode, AuditLogEntry } from '@/types/roster';
 
+export const maxDuration = 60;
+
 const GenerateRequestSchema = z.object({
   monthKey: z.string().regex(/^\d{4}-\d{2}$/),
   timeLimitSeconds: z.number().int().min(10).max(1800).optional(),

@@ -1,51 +1,56 @@
-# Deploying Frontend (Vercel) + Backend (Render)
+# Free Cloud Deployment on Vercel + Neon (No Credit Card Required)
 
-## 1. Push Repository to GitHub
-Make sure your repo root contains `frontend/` and `backend/`, and push to GitHub.
-
----
-
-## 2. Deploy Backend on Render (`backend/`)
-
-### Option A — Blueprint (`backend/render.yaml`)
-1. In Render Dashboard, click **New → Blueprint** and connect your GitHub repository.
-2. Render reads `backend/render.yaml` (if prompted for blueprint path, set `backend/render.yaml`), which creates:
-   - `smart-roster-db` (PostgreSQL)
-   - `roster-solver` (`backend/solver-service` — Python FastAPI + OR-Tools)
-   - `roster-api` (`backend/api` — Next.js API + Prisma, auto-pushes schema & seeds initial data if empty)
-3. When prompted for `AUTH_SECRET`, paste a strong random string (e.g. `openssl rand -hex 32`) — **save this exact value** to paste into Vercel too! (`OPENAI_API_KEY` / `ANTHROPIC_API_KEY` are optional; deterministic fallback works without them.)
-
-### Option B — Manual Web Services on Render
-1. **PostgreSQL**: Create a Render PostgreSQL DB (or use Supabase) and copy `DATABASE_URL`.
-2. **Solver Service** (`Web Service`):
-   - **Root Directory**: `backend/solver-service`
-   - **Runtime**: Python 3
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-   - **Health Check Path**: `/health`
-3. **Backend API** (`Web Service`):
-   - **Root Directory**: `backend/api`
-   - **Runtime**: Node
-   - **Build Command**: `npm install && npx prisma generate && npx prisma db push --accept-data-loss && npm run db:seed-if-empty && npm run build`
-   - **Start Command**: `npm run start`
-   - **Health Check Path**: `/api/health`
-   - **Environment Variables**:
-     - `DATABASE_URL` = your PostgreSQL URL
-     - `SOLVER_URL` = `https://<your-roster-solver>.onrender.com` (no trailing slash)
-     - `AUTH_SECRET` = strong random secret (same as Vercel)
-     - `COOKIE_SECURE` = `true`
-
-Verify `https://<your-roster-api>.onrender.com/api/health` returns `{"healthy":true,...}`.
+Because the repository is split cleanly into `frontend/`, `backend/api/`, and `backend/solver-service/`, you can host **all 3 services for free on Vercel** and PostgreSQL for free on **Neon** — without entering any credit card.
 
 ---
 
-## 3. Deploy Frontend on Vercel (`frontend/`)
-1. In Vercel Dashboard, click **Add New → Project** and select your GitHub repository.
-2. Set **Root Directory** to `frontend`.
-3. Framework Preset: **Next.js** (auto-detected).
-4. Add **Environment Variables**:
-   - `BACKEND_API_URL` = `https://<your-roster-api>.onrender.com` (no trailing slash)
-   - `AUTH_SECRET` = the **exact same** `AUTH_SECRET` configured on `roster-api` in Render
+## Step 1: Create Free PostgreSQL on Neon (No Credit Card)
+1. Sign in directly at **[neon.tech](https://neon.tech)** with GitHub/email (free tier requires no credit card).
+2. Create a new project (e.g. `smart-roster`).
+3. Copy your **Connection String** (`postgresql://...?sslmode=require`).
+
+---
+
+## Step 2: Deploy Python Solver (`backend/solver-service`) on Vercel
+1. In Vercel Dashboard, click **Add New → Project** and import `MohishPadave/smart-roster-system`.
+2. Set **Project Name**: e.g. `smart-roster-solver`.
+3. Click **Edit** next to **Root Directory** and set it to: `backend/solver-service`
+4. Leave Framework Preset / Build / Output settings as default (Vercel auto-detects `app/main.py`, `.python-version`, `requirements.txt`, and `backend/solver-service/vercel.json`).
 5. Click **Deploy**.
+6. Once live, test `https://<your-solver-domain>.vercel.app/health` — it should return `{"status":"healthy","service":"solver-service"}`.
+   - Copy this base URL (`https://<your-solver-domain>.vercel.app`, **no trailing slash**).
 
-> Note: Render Free tier instances sleep after 15 minutes of inactivity, so the very first login or `Generate Roster` call after idle may take ~30s while Render wakes up.
+---
+
+## Step 3: Deploy Backend API (`backend/api`) on Vercel
+1. Click **Add New → Project** and import `MohishPadave/smart-roster-system` again.
+2. Set **Project Name**: e.g. `smart-roster-api`.
+3. Set **Root Directory** to: `backend/api`
+4. **Framework Preset**: `Next.js` (auto-detected). `backend/api/vercel.json` automatically runs `prisma generate`, pushes the schema, seeds initial data if empty, and runs `next build`.
+5. Expand **Environment Variables** *before* clicking Deploy and add:
+   - `DATABASE_URL` = your Neon connection string from Step 1
+   - `SOLVER_URL` = `https://<your-solver-domain>.vercel.app` (from Step 2, no trailing slash)
+   - `AUTH_SECRET` = any strong random secret string (e.g. `roster-prod-secret-key-2026` — **save this exact value** for Step 4)
+   - `COOKIE_SECURE` = `true`
+   - *(Optional)* `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` (deterministic AI fallback works without them)
+6. Click **Deploy**.
+7. Once live, verify `https://<your-api-domain>.vercel.app/api/health` returns `{"healthy":true,...}`.
+
+---
+
+## Step 4: Deploy Frontend (`frontend`) on Vercel
+1. Click **Add New → Project** and import `MohishPadave/smart-roster-system` a third time.
+2. Set **Project Name**: e.g. `smart-roster-system` (this is the main URL you submit to HR).
+3. Set **Root Directory** to: `frontend`
+4. **Framework Preset**: `Next.js` (auto-detected).
+5. Expand **Environment Variables** and add:
+   - `BACKEND_API_URL` = `https://<your-api-domain>.vercel.app` (from Step 3, no trailing slash)
+   - `AUTH_SECRET` = the **exact same** `AUTH_SECRET` value from Step 3
+6. Click **Deploy**.
+
+Open `https://<your-frontend-domain>.vercel.app` and sign in with the seeded Admin account (`admin@roaster.io` / `Admin@123`) or click one of the quick-fill demo accounts on the login page.
+
+---
+
+## Optional Alternative: Render (`backend/render.yaml`)
+If you ever prefer Render (`backend/render.yaml`), use **New → Blueprint** with `backend/render.yaml` to deploy Postgres + `roster-solver` + `roster-api` together, then point `frontend/` on Vercel to your Render API URL.

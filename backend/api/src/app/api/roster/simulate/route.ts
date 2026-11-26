@@ -14,6 +14,8 @@ import {
 } from '@/lib/solver-client';
 import { ShiftCode, AuditLogEntry } from '@/types/roster';
 
+export const maxDuration = 60;
+
 const SimulateRequestSchema = z.object({
   rosterVersionId: z.string(),
   disruptionDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),

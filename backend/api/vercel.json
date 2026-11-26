@@ -1,0 +1,4 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npx prisma generate && npx prisma db push --accept-data-loss && npm run db:seed-if-empty && npm run build"
+}

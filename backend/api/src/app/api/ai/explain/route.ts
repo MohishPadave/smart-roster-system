@@ -12,6 +12,8 @@ import {
   RuleViolation,
 } from '@/types/roster';
 
+export const maxDuration = 60;
+
 const ExplainRequestSchema = z.object({
   monthKey: z.string().optional(),
   unsatisfiableCore: z.array(z.any()).optional(),
