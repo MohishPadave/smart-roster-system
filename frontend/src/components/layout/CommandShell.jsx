@@ -123,10 +123,10 @@ export function CommandShell({ children }) {
     return (<div className="min-h-screen flex flex-col bg-[#fafafa] text-zinc-950">
       {/* Crisp Monochrome Header */}
       <header className="sticky top-0 z-40 border-b border-zinc-200 bg-white/95 backdrop-blur-sm">
-        <div className="max-w-[1640px] mx-auto px-4 lg:px-8 h-14 flex items-center justify-between gap-4">
+        <div className="max-w-[1640px] mx-auto px-3 sm:px-5 lg:px-8 h-14 flex items-center justify-between gap-2 sm:gap-4">
           {/* Left: Wordmark + Navigation */}
-          <div className="flex items-center gap-7">
-            <Link href="/dashboard" className="flex items-center gap-2.5">
+          <div className="flex items-center gap-4 lg:gap-7 min-w-0">
+            <Link href="/dashboard" className="flex items-center gap-2 shrink-0">
               <div className="w-7 h-7 rounded bg-zinc-950 text-white flex items-center justify-center font-mono text-xs font-bold tracking-tighter">
                 R/
               </div>
@@ -134,17 +134,17 @@ export function CommandShell({ children }) {
                 <span className="text-sm font-semibold tracking-tight text-zinc-950">
                   Roster
                 </span>
-                <span className="hidden sm:inline text-xs text-zinc-400 font-mono ml-2">
+                <span className="hidden xl:inline text-xs text-zinc-400 font-mono ml-2">
                   CP-SAT
                 </span>
               </div>
             </Link>
 
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-1">
               {NAV_ITEMS.map((item) => {
             const isActive = item.match.includes(pathname);
             const Icon = item.icon;
-            return (<Link key={item.href} href={item.href} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${isActive
+            return (<Link key={item.href} href={item.href} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${isActive
                     ? 'bg-zinc-950 text-white'
                     : 'text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100'}`}>
                     <Icon className="w-3.5 h-3.5"/>
@@ -155,16 +155,16 @@ export function CommandShell({ children }) {
           </div>
 
           {/* Right: System Telemetry + Controls */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Minimal Status Indicator */}
             <div className="hidden xl:flex items-center gap-3 px-2.5 py-1 rounded-md border border-zinc-200 bg-zinc-50 text-[11px] font-mono text-zinc-600">
               <span className="flex items-center gap-1.5">
-                <span className={`w-1.5 h-1.5 rounded-full ${health?.services.postgres.healthy ? 'bg-emerald-600' : 'bg-red-600'}`}/>
+                <span className={`w-1.5 h-1.5 rounded-full ${health?.services?.postgres?.healthy ? 'bg-emerald-600' : 'bg-red-600'}`}/>
                 <span>DB</span>
               </span>
               <span className="text-zinc-300">/</span>
               <span className="flex items-center gap-1.5">
-                <span className={`w-1.5 h-1.5 rounded-full ${health?.services.solver.healthy ? 'bg-emerald-600' : 'bg-amber-500'}`}/>
+                <span className={`w-1.5 h-1.5 rounded-full ${health?.services?.solver?.healthy ? 'bg-emerald-600' : 'bg-amber-500'}`}/>
                 <span>SOLVER</span>
               </span>
             </div>
@@ -172,76 +172,83 @@ export function CommandShell({ children }) {
             {/* Custom Month Picker */}
             <CustomMonthPicker value={monthKey} onChange={handleMonthChange}/>
 
-            {/* Export */}
-            <button type="button" disabled={exporting} onClick={() => handleExport('xlsx')} className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 disabled:opacity-50 text-xs font-medium text-zinc-700 transition-colors cursor-pointer" title="Export Excel (.xlsx)">
+            {/* Export (Desktop / Large Tablet) */}
+            <button type="button" disabled={exporting} onClick={() => handleExport('xlsx')} className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 disabled:opacity-50 text-xs font-medium text-zinc-700 transition-colors cursor-pointer" title="Export Excel (.xlsx)">
               <Download className="w-3.5 h-3.5 text-zinc-500"/>
-              <span>{exporting ? 'Exporting...' : 'Export'}</span>
+              <span className="hidden lg:inline">{exporting ? 'Exporting...' : 'Export'}</span>
             </button>
 
             {/* Platform Guide */}
-            <button type="button" onClick={() => setGuideOpen(true)} className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-700 transition-colors cursor-pointer" title="Platform Guide">
+            <button type="button" onClick={() => setGuideOpen(true)} className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-700 transition-colors cursor-pointer" title="Platform Guide" aria-label="Platform Guide">
               <BookOpen className="w-3.5 h-3.5 text-zinc-500"/>
-              <span className="hidden sm:inline">Guide</span>
+              <span className="hidden md:inline">Guide</span>
             </button>
 
             {/* Diagnostics Brief */}
-            <button onClick={() => openCopilot()} className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-800 transition-colors cursor-pointer">
+            <button onClick={() => openCopilot()} className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-800 transition-colors cursor-pointer" title="Conflict Brief" aria-label="Conflict Brief">
               <FileText className="w-3.5 h-3.5 text-zinc-500"/>
-              <span className="hidden sm:inline">Conflict Brief</span>
+              <span className="hidden md:inline">Conflict Brief</span>
               {spofItems.length > 0 && (<span className="px-1.5 py-0.2 rounded bg-zinc-900 text-white font-mono text-[10px]">
                   {spofItems.length}
                 </span>)}
             </button>
 
             {/* Primary Solve CTA */}
-            <button onClick={() => generateRoster(monthKey)} disabled={generating} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-zinc-950 hover:bg-zinc-800 disabled:opacity-50 text-xs font-medium text-white transition-colors cursor-pointer">
-              <RefreshCw className={`w-3.5 h-3.5 ${generating ? 'animate-spin' : ''}`}/>
-              <span>{generating ? 'Solving...' : 'Generate Roster'}</span>
+            <button onClick={() => generateRoster(monthKey)} disabled={generating} className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-md bg-zinc-950 hover:bg-zinc-800 disabled:opacity-50 text-xs font-medium text-white transition-colors cursor-pointer whitespace-nowrap">
+              <RefreshCw className={`w-3.5 h-3.5 shrink-0 ${generating ? 'animate-spin' : ''}`}/>
+              <span className="sm:hidden">{generating ? '...' : 'Solve'}</span>
+              <span className="hidden sm:inline">{generating ? 'Solving...' : 'Generate Roster'}</span>
             </button>
 
             {/* User & Logout */}
-            <div className="flex items-center gap-2 pl-2 border-l border-zinc-200">
-              {user && (<span className="hidden lg:inline text-xs font-medium text-zinc-700 max-w-[120px] truncate" title={user.email}>
+            <div className="flex items-center gap-2 pl-1.5 sm:pl-2 border-l border-zinc-200">
+              {user && (<span className="hidden xl:inline text-xs font-medium text-zinc-700 max-w-[120px] truncate" title={user.email}>
                   {user.name}
                 </span>)}
-              <button onClick={handleLogout} className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-zinc-200 bg-white hover:bg-zinc-100 text-xs font-medium text-zinc-700 transition-colors cursor-pointer" title="Sign out">
+              <button onClick={handleLogout} className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-md border border-zinc-200 bg-white hover:bg-zinc-100 text-xs font-medium text-zinc-700 transition-colors cursor-pointer" title="Sign out" aria-label="Sign out">
                 <LogOut className="w-3.5 h-3.5 text-zinc-500"/>
-                <span className="hidden sm:inline">Logout</span>
+                <span className="hidden md:inline">Logout</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Mobile Nav */}
-        <div className="flex md:hidden border-t border-zinc-200 px-4 py-1.5 gap-1.5 overflow-x-auto bg-zinc-50">
-          {NAV_ITEMS.map((item) => {
+        {/* Mobile & Tablet Nav + Quick Export */}
+        <div className="flex lg:hidden items-center justify-between border-t border-zinc-200 px-3 sm:px-5 py-1.5 gap-2 bg-zinc-50">
+          <div className="flex items-center gap-1.5 overflow-x-auto min-w-0">
+            {NAV_ITEMS.map((item) => {
             const isActive = item.match.includes(pathname);
             const Icon = item.icon;
-            return (<Link key={item.href} href={item.href} className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs whitespace-nowrap ${isActive
+            return (<Link key={item.href} href={item.href} className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs whitespace-nowrap shrink-0 ${isActive
                     ? 'bg-zinc-950 text-white font-medium'
                     : 'text-zinc-600 bg-white border border-zinc-200'}`}>
-                <Icon className="w-3.5 h-3.5"/>
-                <span>{item.label}</span>
-              </Link>);
+                  <Icon className="w-3.5 h-3.5"/>
+                  <span>{item.label}</span>
+                </Link>);
         })}
+          </div>
+          <button type="button" disabled={exporting} onClick={() => handleExport('xlsx')} className="md:hidden inline-flex items-center gap-1 px-2.5 py-1 rounded border border-zinc-200 bg-white text-[11px] font-mono text-zinc-700 shrink-0 cursor-pointer disabled:opacity-50">
+            <Download className="w-3 h-3 text-zinc-500"/>
+            <span>{exporting ? '...' : '.xlsx'}</span>
+          </button>
         </div>
       </header>
 
       {/* Toast Notification */}
-      {toast && (<div className="fixed bottom-5 right-5 z-50 max-w-md">
+      {toast && (<div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:bottom-5 sm:right-5 z-50 sm:max-w-md">
           <div className={`flex items-start gap-2.5 px-4 py-3 rounded-lg border shadow-lg text-xs ${toast.type === 'error'
                 ? 'bg-white border-red-300 text-red-900'
                 : 'bg-zinc-950 border-zinc-800 text-white'}`}>
             {toast.type === 'error' ? (<AlertTriangle className="w-4 h-4 text-red-600 shrink-0 mt-0.5"/>) : (<CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"/>)}
-            <p className="leading-relaxed font-medium">{toast.message}</p>
-            <button onClick={clearToast} className="opacity-60 hover:opacity-100 ml-2 cursor-pointer">
+            <p className="leading-relaxed font-medium flex-1">{toast.message}</p>
+            <button onClick={clearToast} className="opacity-60 hover:opacity-100 ml-2 shrink-0 cursor-pointer">
               <X className="w-3.5 h-3.5"/>
             </button>
           </div>
         </div>)}
 
       {/* Main Content */}
-      <main className="flex-1 max-w-[1640px] w-full mx-auto px-4 lg:px-8 py-7">{children}</main>
+      <main className="flex-1 max-w-[1640px] w-full mx-auto px-3 sm:px-5 lg:px-8 py-4 sm:py-7">{children}</main>
 
       <Footer />
 

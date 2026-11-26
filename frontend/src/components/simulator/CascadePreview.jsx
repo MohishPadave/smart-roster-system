@@ -17,7 +17,7 @@ export function CascadePreview({ diffItems, ruleNames, }) {
         <span className="font-mono text-[10px] text-zinc-500">Minimal-Perturbation</span>
       </div>
       <div className="divide-y divide-zinc-200 max-h-64 overflow-y-auto">
-        {diffItems.map((item, idx) => (<div key={`${item.employee_id}-${item.date}-${idx}`} className="px-3.5 py-2.5 flex items-center justify-between gap-3 text-xs">
+        {diffItems.map((item, idx) => (<div key={`${item.employee_id}-${item.date}-${idx}`} className="px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
             <div>
               <div className="font-semibold text-zinc-950">{item.employee_name}</div>
               <div className="font-mono text-[10px] text-zinc-500">

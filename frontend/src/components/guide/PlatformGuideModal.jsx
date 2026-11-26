@@ -103,12 +103,12 @@ export function PlatformGuideModal({ open, onClose, }) {
         return null;
     const step = STEPS[stepIdx];
     const Icon = step.icon;
-    return (<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4">
-      <div className="w-full max-w-2xl rounded-lg bg-white border border-zinc-300 shadow-2xl overflow-hidden">
+    return (<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-3 sm:p-4">
+      <div className="w-full max-w-2xl max-h-[90vh] flex flex-col rounded-lg bg-white border border-zinc-300 shadow-2xl overflow-hidden">
         {/* Top Bar */}
-        <div className="px-6 py-4 bg-zinc-950 text-white flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 bg-zinc-950 text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
-            <BookOpen className="w-4 h-4 text-zinc-300"/>
+            <BookOpen className="w-4 h-4 text-zinc-300 shrink-0"/>
             <div>
               <h2 className="text-sm font-semibold tracking-tight">Platform Navigation Guide</h2>
               <p className="text-[11px] font-mono text-zinc-400">
@@ -122,11 +122,11 @@ export function PlatformGuideModal({ open, onClose, }) {
         </div>
 
         {/* Stepper Pills */}
-        <div className="px-6 py-3 bg-zinc-50 border-b border-zinc-200 grid grid-cols-4 gap-2">
+        <div className="px-4 sm:px-6 py-2.5 sm:py-3 bg-zinc-50 border-b border-zinc-200 grid grid-cols-2 sm:grid-cols-4 gap-2 shrink-0">
           {STEPS.map((s, idx) => {
             const active = idx === stepIdx;
             const visited = idx < stepIdx;
-            return (<button key={s.id} type="button" onClick={() => setStepIdx(idx)} className={`px-2.5 py-2 rounded-md border text-left transition-colors cursor-pointer ${active
+            return (<button key={s.id} type="button" onClick={() => setStepIdx(idx)} className={`px-2.5 py-1.5 sm:py-2 rounded-md border text-left transition-colors cursor-pointer ${active
                     ? 'bg-zinc-950 text-white border-zinc-950'
                     : visited
                         ? 'bg-white text-zinc-900 border-zinc-300'
@@ -138,14 +138,14 @@ export function PlatformGuideModal({ open, onClose, }) {
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-5">
-          <div className="flex items-start justify-between gap-4">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto flex-1">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
             <div className="flex items-start gap-3">
               <div className="w-9 h-9 rounded-md bg-zinc-100 border border-zinc-200 flex items-center justify-center shrink-0">
                 <Icon className="w-4 h-4 text-zinc-900"/>
               </div>
               <div>
-                <h3 className="text-base font-semibold text-zinc-950">{step.title}</h3>
+                <h3 className="text-sm sm:text-base font-semibold text-zinc-950">{step.title}</h3>
                 <p className="text-xs text-zinc-500 mt-0.5">{step.subtitle}</p>
               </div>
             </div>
@@ -153,7 +153,7 @@ export function PlatformGuideModal({ open, onClose, }) {
             <button type="button" onClick={() => {
             onClose();
             router.push(step.routeHref);
-        }} className="shrink-0 px-3 py-1.5 rounded-md border border-zinc-300 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-900 cursor-pointer">
+        }} className="self-start sm:self-auto shrink-0 px-3 py-1.5 rounded-md border border-zinc-300 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-900 cursor-pointer">
               {step.routeLabel}
             </button>
           </div>
@@ -194,7 +194,7 @@ export function PlatformGuideModal({ open, onClose, }) {
         </div>
 
         {/* Footer Navigation */}
-        <div className="px-6 py-3.5 bg-zinc-50 border-t border-zinc-200 flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-3 sm:py-3.5 bg-zinc-50 border-t border-zinc-200 flex flex-wrap items-center justify-between gap-2 shrink-0">
           <button type="button" onClick={() => setStepIdx((i) => Math.max(0, i - 1))} disabled={stepIdx === 0} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-zinc-300 bg-white hover:bg-zinc-100 disabled:opacity-40 text-xs font-medium text-zinc-800 cursor-pointer">
             <ArrowLeft className="w-3.5 h-3.5"/>
             <span>Previous</span>

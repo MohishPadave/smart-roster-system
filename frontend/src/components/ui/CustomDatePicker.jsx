@@ -46,7 +46,7 @@ export function CustomDatePicker({ value, onChange, }) {
         <Calendar className="w-3.5 h-3.5 text-zinc-500"/>
       </button>
 
-      {open && (<div className="absolute left-0 mt-1 z-50 w-64 rounded-lg border border-zinc-300 bg-white shadow-xl p-3 space-y-2.5">
+      {open && (<div className="absolute left-0 mt-1 z-50 w-64 max-w-[calc(100vw-2rem)] rounded-lg border border-zinc-300 bg-white shadow-xl p-3 space-y-2.5">
           <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
             <button type="button" onClick={() => shiftMonth(-1)} className="p-1 rounded hover:bg-zinc-100 text-zinc-600 cursor-pointer">
               <ChevronLeft className="w-4 h-4"/>

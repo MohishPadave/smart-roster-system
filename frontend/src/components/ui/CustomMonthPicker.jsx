@@ -36,7 +36,7 @@ export function CustomMonthPicker({ value, onChange, }) {
         <ChevronDown className="w-3 h-3 text-zinc-400"/>
       </button>
 
-      {open && (<div className="absolute right-0 mt-1.5 z-50 w-56 rounded-lg border border-zinc-300 bg-white shadow-xl p-3 space-y-3">
+      {open && (<div className="absolute right-0 mt-1.5 z-50 w-56 max-w-[calc(100vw-1.5rem)] rounded-lg border border-zinc-300 bg-white shadow-xl p-3 space-y-3">
           <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
             <button type="button" onClick={() => setDisplayYear((y) => y - 1)} className="p-1 rounded hover:bg-zinc-100 text-zinc-600 cursor-pointer">
               <ChevronLeft className="w-4 h-4"/>

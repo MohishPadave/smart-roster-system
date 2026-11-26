@@ -36,7 +36,7 @@ function LoginForm() {
             setSubmitting(false);
         }
     };
-    return (<div className="min-h-screen bg-[#fafafa] flex flex-col justify-center items-center px-4 py-12">
+    return (<div className="min-h-[calc(100vh-64px)] bg-[#fafafa] flex flex-col justify-center items-center px-4 py-8 sm:py-12">
       <div className="w-full max-w-sm space-y-6">
         {/* Wordmark */}
         <div className="flex items-center gap-2.5">

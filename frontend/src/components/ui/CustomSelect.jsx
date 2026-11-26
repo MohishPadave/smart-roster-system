@@ -44,11 +44,11 @@ export function CustomSelect({ value, onChange, options, placeholder = 'Select..
         <ChevronDown className={`w-3.5 h-3.5 text-zinc-500 shrink-0 transition-transform ${open ? 'rotate-180 text-zinc-950' : ''}`}/>
       </button>
 
-      {open && (<div className="absolute left-0 right-0 mt-1 z-50 min-w-[200px] rounded-md border border-zinc-300 bg-white shadow-xl overflow-hidden">
+      {open && (<div className="absolute left-0 right-0 mt-1 z-50 min-w-[180px] max-w-[calc(100vw-2rem)] rounded-md border border-zinc-300 bg-white shadow-xl overflow-hidden">
           {showSearch && (<div className="p-2 border-b border-zinc-100 bg-zinc-50">
               <div className="relative">
                 <Search className="w-3 h-3 text-zinc-400 absolute left-2.5 top-1/2 -translate-y-1/2"/>
-                <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search..." autoFocus className="w-full pl-7 pr-2.5 py-1 rounded border border-zinc-200 bg-white text-xs text-zinc-950 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-900"/>
+                <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search..." className="w-full pl-7 pr-2.5 py-1 rounded border border-zinc-200 bg-white text-xs text-zinc-950 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-900"/>
               </div>
             </div>)}
 

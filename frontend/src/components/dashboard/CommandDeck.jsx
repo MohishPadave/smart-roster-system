@@ -38,12 +38,12 @@ export function CommandDeck() {
     const singlePct = Math.round((singleBrands / totalBrands) * 100);
     const workingShiftsCount = rosterVersion?.shiftEntries.filter((s) => s.shiftCode === 'W' || s.shiftCode === 'BK').length ?? 0;
     const backupShiftsCount = rosterVersion?.shiftEntries.filter((s) => s.shiftCode === 'BK').length ?? 0;
-    return (<div className="space-y-8">
+    return (<div className="space-y-6 sm:space-y-8">
       {/* Editorial Header Strip */}
-      <section className="bg-white border border-zinc-200 rounded-lg p-6 lg:p-7">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+      <section className="bg-white border border-zinc-200 rounded-lg p-4 sm:p-6 lg:p-7">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 sm:gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="flex items-center gap-2.5 text-[11px] font-mono uppercase tracking-wider text-zinc-500">
+            <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono uppercase tracking-wider text-zinc-500">
               <span>Operations Cycle {monthKey}</span>
               {rosterVersion && (<>
                   <span>/</span>
@@ -54,37 +54,37 @@ export function CommandDeck() {
                   </span>
                 </>)}
             </div>
-            <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight text-zinc-950">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight text-zinc-950">
               Workforce Scheduling &amp; Coverage Overview
             </h1>
-            <p className="text-sm text-zinc-600 leading-relaxed">
+            <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed">
               Constraint optimization across {totalEmp} active specialists,{' '}
               {kpis?.activeBrands ?? brands.length} D2C brands, and {kpis?.totalPods ?? pods.length} pods.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <button type="button" onClick={openAddEmployee} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-zinc-300 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-900 transition-colors cursor-pointer">
-              <UserPlus className="w-3.5 h-3.5 text-zinc-600"/>
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 w-full lg:w-auto">
+            <button type="button" onClick={openAddEmployee} className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-md border border-zinc-300 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-900 transition-colors cursor-pointer">
+              <UserPlus className="w-3.5 h-3.5 text-zinc-600 shrink-0"/>
               <span>New Employee</span>
             </button>
-            <button type="button" onClick={openAddBrand} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-zinc-300 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-900 transition-colors cursor-pointer">
-              <Building2 className="w-3.5 h-3.5 text-zinc-600"/>
+            <button type="button" onClick={openAddBrand} className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-md border border-zinc-300 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-900 transition-colors cursor-pointer">
+              <Building2 className="w-3.5 h-3.5 text-zinc-600 shrink-0"/>
               <span>New Brand</span>
             </button>
-            <button onClick={() => generateRoster(monthKey)} disabled={generating} className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-zinc-950 hover:bg-zinc-800 text-xs font-medium text-white transition-colors cursor-pointer disabled:opacity-50">
-              <RefreshCw className={`w-3.5 h-3.5 ${generating ? 'animate-spin' : ''}`}/>
+            <button onClick={() => generateRoster(monthKey)} disabled={generating} className="inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-md bg-zinc-950 hover:bg-zinc-800 text-xs font-medium text-white transition-colors cursor-pointer disabled:opacity-50">
+              <RefreshCw className={`w-3.5 h-3.5 shrink-0 ${generating ? 'animate-spin' : ''}`}/>
               <span>{generating ? 'Solving...' : rosterVersion ? 'Re-Solve Schedule' : 'Generate Schedule'}</span>
             </button>
-            <Link href="/roster" className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-zinc-300 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-900 transition-colors">
+            <Link href="/roster" className="inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-md border border-zinc-300 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-900 transition-colors">
               <span>Open Matrix</span>
-              <ArrowRight className="w-3.5 h-3.5 text-zinc-500"/>
+              <ArrowRight className="w-3.5 h-3.5 text-zinc-500 shrink-0"/>
             </Link>
           </div>
         </div>
 
         {/* Solver Telemetry Strip */}
-        {rosterVersion && (<div className="mt-6 pt-5 border-t border-zinc-200 grid grid-cols-2 sm:grid-cols-4 gap-6">
+        {rosterVersion && (<div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-zinc-200 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
             <div>
               <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500">Solve Time</div>
               <div className="mt-1 text-lg font-mono font-semibold text-zinc-950 tabular-nums">
@@ -122,9 +122,9 @@ export function CommandDeck() {
       {(unsatisfiableCore?.length || (clientValidation && !clientValidation.valid)) && (<ConflictInspector unsatisfiableCore={unsatisfiableCore} validation={clientValidation} onAskCopilot={() => openCopilot()}/>)}
 
       {/* 4 Monochrome Metric Tiles */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 border border-zinc-200 rounded-lg bg-white divide-y sm:divide-y-0 sm:divide-x divide-zinc-200">
+      <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-px bg-zinc-200 border border-zinc-200 rounded-lg overflow-hidden">
         {/* Metric 1 */}
-        <div className="p-5 flex flex-col justify-between gap-4">
+        <div className="p-4 sm:p-5 bg-white flex flex-col justify-between gap-4">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500">
               Workforce Supply
@@ -149,7 +149,7 @@ export function CommandDeck() {
         </div>
 
         {/* Metric 2 */}
-        <div className="p-5 flex flex-col justify-between gap-4">
+        <div className="p-4 sm:p-5 bg-white flex flex-col justify-between gap-4">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500">
               80/20 Brand Topology
@@ -173,7 +173,7 @@ export function CommandDeck() {
         </div>
 
         {/* Metric 3 */}
-        <div className="p-5 flex flex-col justify-between gap-4">
+        <div className="p-4 sm:p-5 bg-white flex flex-col justify-between gap-4">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500">
               Demand &amp; Locks
@@ -202,7 +202,7 @@ export function CommandDeck() {
         </div>
 
         {/* Metric 4 */}
-        <div className="p-5 flex flex-col justify-between gap-4">
+        <div className="p-4 sm:p-5 bg-white flex flex-col justify-between gap-4">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500">
               SPOF Bus-Factor Audit

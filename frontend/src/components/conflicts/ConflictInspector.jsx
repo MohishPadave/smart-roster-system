@@ -44,7 +44,7 @@ export function ConflictInspector({ unsatisfiableCore, validation, onAskCopilot,
               Rule Violations ({validation.violations.length}) &amp; Coverage Gaps ({validation.coverageGaps.length})
             </span>
           </div>
-          {validation.coverageGaps.slice(0, 12).map((gap, i) => (<div key={`gap-${i}`} className="flex items-center justify-between text-xs px-3 py-2 rounded bg-red-50 border border-red-200">
+          {validation.coverageGaps.slice(0, 12).map((gap, i) => (<div key={`gap-${i}`} className="flex flex-wrap items-center justify-between gap-2 text-xs px-3 py-2 rounded bg-red-50 border border-red-200">
               <div>
                 <span className="font-semibold text-zinc-950">{gap.brandName}</span>
                 <span className="text-zinc-400 mx-1.5">/</span>

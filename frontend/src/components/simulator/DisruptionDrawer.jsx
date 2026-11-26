@@ -29,12 +29,12 @@ export function DisruptionDrawer() {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-[#fafafa]">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 sm:space-y-5 bg-[#fafafa]">
           {simulating ? (<div className="py-16 flex flex-col items-center justify-center gap-3 text-zinc-500">
               <Loader2 className="w-6 h-6 text-zinc-900 animate-spin"/>
               <p className="text-xs font-mono">Reoptimizing schedule...</p>
             </div>) : simulationResult ? (<>
-              <div className="p-4 rounded-md bg-white border border-zinc-200 flex items-center justify-between gap-4">
+              <div className="p-3.5 sm:p-4 rounded-md bg-white border border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
                 <div>
                   <div className="text-[10px] font-mono uppercase tracking-wider text-red-700 font-semibold">
                     Simulated Unplanned Leave
@@ -46,7 +46,7 @@ export function DisruptionDrawer() {
                     Date: {simulationResult.disruptionDate}
                   </div>
                 </div>
-                <div className="text-right font-mono text-xs space-y-0.5">
+                <div className="sm:text-right font-mono text-xs flex sm:block items-center gap-3">
                   <div className="text-zinc-950 font-semibold">
                     {simulationResult.solver_duration_ms} ms
                   </div>

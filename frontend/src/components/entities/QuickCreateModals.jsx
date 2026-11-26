@@ -140,9 +140,9 @@ export function QuickCreateModals({ onCreated }) {
     ];
     return (<>
       {/* Add Employee Modal */}
-      {addEmployeeModalOpen && (<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-lg bg-white border border-zinc-300 shadow-2xl overflow-hidden">
-            <div className="px-5 py-3.5 bg-zinc-50 border-b border-zinc-200 flex items-center justify-between">
+      {addEmployeeModalOpen && (<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-3 sm:p-4">
+          <div className="w-full max-w-md max-h-[90vh] flex flex-col rounded-lg bg-white border border-zinc-300 shadow-2xl overflow-hidden">
+            <div className="px-4 sm:px-5 py-3.5 bg-zinc-50 border-b border-zinc-200 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <UserPlus className="w-4 h-4 text-zinc-900"/>
                 <h2 className="text-sm font-semibold text-zinc-950">Add New Employee</h2>
@@ -155,7 +155,7 @@ export function QuickCreateModals({ onCreated }) {
               </button>
             </div>
 
-            <form onSubmit={handleCreateEmployee} className="p-5 space-y-3.5 text-xs">
+            <form onSubmit={handleCreateEmployee} className="p-4 sm:p-5 space-y-3.5 text-xs overflow-y-auto">
               {error && (<div className="px-3 py-2 rounded bg-red-50 border border-red-200 text-red-700 font-medium">
                   {error}
                 </div>)}
@@ -171,7 +171,7 @@ export function QuickCreateModals({ onCreated }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-zinc-700">Pod</label>
                   <CustomSelect value={empForm.podId} onChange={(v) => setEmpForm({ ...empForm, podId: v })} options={podOptions}/>
@@ -236,9 +236,9 @@ export function QuickCreateModals({ onCreated }) {
         </div>)}
 
       {/* Add Brand Modal */}
-      {addBrandModalOpen && (<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-lg bg-white border border-zinc-300 shadow-2xl overflow-hidden">
-            <div className="px-5 py-3.5 bg-zinc-50 border-b border-zinc-200 flex items-center justify-between">
+      {addBrandModalOpen && (<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-3 sm:p-4">
+          <div className="w-full max-w-md max-h-[90vh] flex flex-col rounded-lg bg-white border border-zinc-300 shadow-2xl overflow-hidden">
+            <div className="px-4 sm:px-5 py-3.5 bg-zinc-50 border-b border-zinc-200 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <Building2 className="w-4 h-4 text-zinc-900"/>
                 <h2 className="text-sm font-semibold text-zinc-950">Add New D2C Brand</h2>
@@ -251,7 +251,7 @@ export function QuickCreateModals({ onCreated }) {
               </button>
             </div>
 
-            <form onSubmit={handleCreateBrand} className="p-5 space-y-3.5 text-xs">
+            <form onSubmit={handleCreateBrand} className="p-4 sm:p-5 space-y-3.5 text-xs overflow-y-auto">
               {error && (<div className="px-3 py-2 rounded bg-red-50 border border-red-200 text-red-700 font-medium">
                   {error}
                 </div>)}
@@ -261,7 +261,7 @@ export function QuickCreateModals({ onCreated }) {
                 <input required value={brandForm.name} onChange={(e) => setBrandForm({ ...brandForm, name: e.target.value })} placeholder="e.g. UrbanRoast" className="w-full px-3 py-2 rounded-md border border-zinc-300 text-zinc-950 focus:outline-none focus:border-zinc-950"/>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-zinc-700">Pod Ownership</label>
                   <CustomSelect value={brandForm.podId} onChange={(v) => setBrandForm({ ...brandForm, podId: v })} options={podOptions}/>
@@ -276,7 +276,7 @@ export function QuickCreateModals({ onCreated }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="text-[11px] font-medium text-zinc-700">Primary Process</label>
                   <CustomSelect value={brandForm.process} onChange={(v) => setBrandForm({ ...brandForm, process: v })} options={Object.values(ProcessType).map((p) => ({ value: p, label: p }))}/>

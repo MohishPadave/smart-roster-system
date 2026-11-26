@@ -46,14 +46,14 @@ export function LensSwitcher({ onOpenAudit }) {
         }
     };
     return (<>
-      <div className="bg-white border border-zinc-200 rounded-lg p-4 space-y-3.5">
+      <div className="bg-white border border-zinc-200 rounded-lg p-3 sm:p-4 space-y-3 sm:space-y-3.5">
         {/* Row 1: 5 Stakeholder Lenses + Quick Add + Publish/Export */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-1 bg-zinc-100 p-1 rounded-md border border-zinc-200">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
+          <div className="flex items-center gap-1 bg-zinc-100 p-1 rounded-md border border-zinc-200 overflow-x-auto max-w-full">
             {LENSES.map((item) => {
             const active = lens === item.id;
             const Icon = item.icon;
-            return (<button key={item.id} type="button" onClick={() => setLens(item.id)} className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-colors cursor-pointer ${active
+            return (<button key={item.id} type="button" onClick={() => setLens(item.id)} className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded text-xs font-medium whitespace-nowrap shrink-0 transition-colors cursor-pointer ${active
                     ? 'bg-zinc-950 text-white'
                     : 'text-zinc-600 hover:text-zinc-950 hover:bg-white/70'}`}>
                   <Icon className="w-3.5 h-3.5"/>
@@ -62,7 +62,7 @@ export function LensSwitcher({ onOpenAudit }) {
         })}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <button type="button" onClick={openAddEmployee} className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-800 cursor-pointer">
               <UserPlus className="w-3.5 h-3.5 text-zinc-600"/>
               <span>Employee</span>
@@ -74,12 +74,12 @@ export function LensSwitcher({ onOpenAudit }) {
             </button>
 
             {rosterVersion && (<>
-                <button type="button" onClick={onOpenAudit} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-700 cursor-pointer">
+                <button type="button" onClick={onOpenAudit} className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-700 cursor-pointer">
                   <History className="w-3.5 h-3.5 text-zinc-500"/>
                   <span>Audit ({rosterVersion.auditLogs?.length ?? 0})</span>
                 </button>
 
-                <button type="button" disabled={committing} onClick={() => togglePublish(isPublished ? 'UNLOCK' : 'PUBLISH', 'Pod Lead', isPublished ? 'Unlocked for schedule adjustments' : 'Signed off & published')} className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border transition-colors cursor-pointer ${isPublished
+                <button type="button" disabled={committing} onClick={() => togglePublish(isPublished ? 'UNLOCK' : 'PUBLISH', 'Pod Lead', isPublished ? 'Unlocked for schedule adjustments' : 'Signed off & published')} className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-medium border transition-colors cursor-pointer ${isPublished
                 ? 'bg-zinc-950 border-zinc-950 text-white hover:bg-zinc-800'
                 : 'bg-white border-zinc-300 text-zinc-900 hover:bg-zinc-50'}`}>
                   {isPublished ? <Unlock className="w-3.5 h-3.5"/> : <Lock className="w-3.5 h-3.5"/>}
@@ -95,31 +95,31 @@ export function LensSwitcher({ onOpenAudit }) {
         </div>
 
         {/* Row 2: Custom Filter Dropdowns + Undo/Redo/Commit OR Legend */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-zinc-100">
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="relative">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pt-3 border-t border-zinc-100">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap items-center gap-2 w-full lg:w-auto">
+            <div className="relative w-full lg:w-44">
               <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-2.5 top-1/2 -translate-y-1/2"/>
-              <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Filter staff or brand..." className="pl-8 pr-3 py-1.5 rounded-md bg-white border border-zinc-300 text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-950 w-44"/>
+              <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Filter staff or brand..." className="pl-8 pr-3 py-1.5 rounded-md bg-white border border-zinc-300 text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-950 w-full"/>
             </div>
 
-            <CustomSelect size="sm" className="w-36" value={selectedPodId} onChange={setSelectedPodId} options={[
+            <CustomSelect size="sm" className="w-full lg:w-36" value={selectedPodId} onChange={setSelectedPodId} options={[
             { value: 'ALL', label: `All Pods (${pods.length})` },
             ...pods.map((p) => ({ value: p.id, label: p.name })),
         ]}/>
 
-            <CustomSelect size="sm" className="w-44" value={selectedBrandId} onChange={setSelectedBrandId} options={[
+            <CustomSelect size="sm" className="w-full lg:w-44" value={selectedBrandId} onChange={setSelectedBrandId} options={[
             { value: 'ALL', label: `All Brands (${brands.length})` },
             ...brands.map((b) => ({ value: b.id, label: b.name })),
         ]}/>
 
-            <CustomSelect size="sm" className="w-36" value={selectedProcess} onChange={setSelectedProcess} options={[
+            <CustomSelect size="sm" className="w-full lg:w-36" value={selectedProcess} onChange={setSelectedProcess} options={[
             { value: 'ALL', label: 'All Processes' },
             ...Object.values(ProcessType).map((proc) => ({ value: proc, label: proc })),
         ]}/>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            {pendingCount > 0 ? (<div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-zinc-100 border border-zinc-300">
+          <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+            {pendingCount > 0 ? (<div className="flex flex-wrap items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-zinc-100 border border-zinc-300 w-full sm:w-auto">
                 <span className="font-mono text-[11px] font-semibold text-zinc-900 mr-1">
                   {pendingCount} staged
                 </span>

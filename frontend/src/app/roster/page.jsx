@@ -27,9 +27,9 @@ export default function RosterPage() {
 
       <DisruptionDrawer />
 
-      {auditOpen && rosterVersion && (<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-lg rounded-lg bg-white border border-zinc-200 shadow-2xl overflow-hidden">
-            <div className="px-5 py-4 bg-zinc-50 border-b border-zinc-200 flex items-center justify-between">
+      {auditOpen && rosterVersion && (<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-3 sm:p-4">
+          <div className="w-full max-w-lg max-h-[90vh] flex flex-col rounded-lg bg-white border border-zinc-200 shadow-2xl overflow-hidden">
+            <div className="px-4 sm:px-5 py-3.5 sm:py-4 bg-zinc-50 border-b border-zinc-200 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <History className="w-4 h-4 text-zinc-700"/>
                 <h3 className="text-sm font-semibold text-zinc-950">

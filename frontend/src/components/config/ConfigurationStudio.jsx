@@ -110,33 +110,33 @@ export function ConfigurationStudio() {
     }));
     return (<div className="space-y-6">
       {/* Header + Quick Actions + Tab Bar */}
-      <div className="bg-white border border-zinc-200 rounded-lg p-5 space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white border border-zinc-200 rounded-lg p-4 sm:p-5 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
           <div>
-            <h1 className="text-xl font-semibold tracking-tight text-zinc-950">
+            <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-zinc-950">
               Entity &amp; Constraint Configuration
             </h1>
             <p className="text-xs text-zinc-500 mt-0.5">
               Manage Pods, Specialists, D2C Brand Operating Calendars, Float Backups, and Leave Locks.
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <button type="button" onClick={openAddEmployee} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-zinc-300 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-900 cursor-pointer">
+          <div className="grid grid-cols-2 sm:flex items-center gap-2 shrink-0">
+            <button type="button" onClick={openAddEmployee} className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md border border-zinc-300 bg-white hover:bg-zinc-50 text-xs font-medium text-zinc-900 cursor-pointer">
               <UserPlus className="w-3.5 h-3.5 text-zinc-600"/>
               <span>New Employee</span>
             </button>
-            <button type="button" onClick={openAddBrand} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-zinc-950 hover:bg-zinc-800 text-xs font-medium text-white cursor-pointer">
+            <button type="button" onClick={openAddBrand} className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md bg-zinc-950 hover:bg-zinc-800 text-xs font-medium text-white cursor-pointer">
               <Building2 className="w-3.5 h-3.5"/>
               <span>New Brand</span>
             </button>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-1 bg-zinc-100 p-1 rounded-md border border-zinc-200 w-fit">
+        <div className="flex items-center gap-1 bg-zinc-100 p-1 rounded-md border border-zinc-200 w-full lg:w-fit overflow-x-auto">
           {tabs.map((t) => {
             const Icon = t.icon;
             const active = tab === t.id;
-            return (<button key={t.id} onClick={() => setTab(t.id)} className={`inline-flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-colors cursor-pointer ${active
+            return (<button key={t.id} onClick={() => setTab(t.id)} className={`inline-flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium whitespace-nowrap shrink-0 transition-colors cursor-pointer ${active
                     ? 'bg-zinc-950 text-white'
                     : 'text-zinc-600 hover:text-zinc-950 hover:bg-white/70'}`}>
                 <Icon className="w-3.5 h-3.5"/>
@@ -168,7 +168,7 @@ export function ConfigurationStudio() {
                 <label className="text-[11px] font-mono text-zinc-500">Brand × Process Rule</label>
                 <CustomSelect value={allocForm.brandProcessRuleId} onChange={(v) => setAllocForm({ ...allocForm, brandProcessRuleId: v })} options={ruleOptions}/>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="text-[11px] font-mono text-zinc-500">Assignment Type</label>
                   <CustomSelect value={allocForm.assignmentType} onChange={(v) => setAllocForm({
@@ -191,8 +191,8 @@ export function ConfigurationStudio() {
           </form>
 
           <div className="lg:col-span-8 bg-white border border-zinc-200 rounded-lg overflow-hidden">
-            <div className="max-h-[560px] overflow-y-auto">
-              <table className="w-full text-left text-xs">
+            <div className="max-h-[560px] overflow-auto">
+              <table className="w-full min-w-[540px] text-left text-xs">
                 <thead className="sticky top-0 bg-zinc-50 border-b border-zinc-200 text-[11px] font-mono text-zinc-500">
                   <tr>
                     <th className="px-4 py-3">Specialist</th>
@@ -257,7 +257,7 @@ export function ConfigurationStudio() {
             </h2>
             <input required placeholder="Full Name" value={empForm.name} onChange={(e) => setEmpForm({ ...empForm, name: e.target.value })} className="w-full px-3 py-2 rounded-md bg-white border border-zinc-300 text-zinc-900"/>
             <input required type="email" placeholder="Email address" value={empForm.email} onChange={(e) => setEmpForm({ ...empForm, email: e.target.value })} className="w-full px-3 py-2 rounded-md bg-white border border-zinc-300 text-zinc-900"/>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <CustomSelect value={empForm.podId} onChange={(v) => setEmpForm({ ...empForm, podId: v })} options={podOptions}/>
               <CustomSelect value={empForm.roleType} onChange={(v) => setEmpForm({ ...empForm, roleType: v })} options={Object.values(RoleType).map((r) => ({ value: r, label: r }))}/>
             </div>
@@ -289,8 +289,8 @@ export function ConfigurationStudio() {
           </form>
 
           <div className="lg:col-span-8 bg-white border border-zinc-200 rounded-lg overflow-hidden">
-            <div className="max-h-[560px] overflow-y-auto">
-              <table className="w-full text-left text-xs">
+            <div className="max-h-[560px] overflow-auto">
+              <table className="w-full min-w-[540px] text-left text-xs">
                 <thead className="sticky top-0 bg-zinc-50 border-b border-zinc-200 text-[11px] font-mono text-zinc-500">
                   <tr>
                     <th className="px-4 py-3">Name</th>
@@ -363,7 +363,7 @@ export function ConfigurationStudio() {
               <span>Add Brand &amp; Operating Rule</span>
             </h2>
             <input required placeholder="Brand Name" value={brandForm.name} onChange={(e) => setBrandForm({ ...brandForm, name: e.target.value })} className="w-full px-3 py-2 rounded-md bg-white border border-zinc-300 text-zinc-900"/>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <CustomSelect value={brandForm.podId} onChange={(v) => setBrandForm({ ...brandForm, podId: v })} options={podOptions}/>
               <CustomSelect value={brandForm.accountTier} onChange={(v) => setBrandForm({ ...brandForm, accountTier: v })} options={[
                 { value: 'Premium', label: 'Premium' },
@@ -371,7 +371,7 @@ export function ConfigurationStudio() {
                 { value: 'Basic', label: 'Basic' },
             ]}/>
             </div>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <CustomSelect value={brandForm.process} onChange={(v) => setBrandForm({ ...brandForm, process: v })} options={Object.values(ProcessType).map((p) => ({ value: p, label: p }))}/>
               <CustomSelect value={brandForm.operatingCalendar} onChange={(v) => setBrandForm({ ...brandForm, operatingCalendar: v })} options={Object.values(OperatingCalendar).map((cal) => ({ value: cal, label: cal }))}/>
             </div>
@@ -381,8 +381,8 @@ export function ConfigurationStudio() {
           </form>
 
           <div className="lg:col-span-8 bg-white border border-zinc-200 rounded-lg overflow-hidden">
-            <div className="max-h-[560px] overflow-y-auto">
-              <table className="w-full text-left text-xs">
+            <div className="max-h-[560px] overflow-auto">
+              <table className="w-full min-w-[540px] text-left text-xs">
                 <thead className="sticky top-0 bg-zinc-50 border-b border-zinc-200 text-[11px] font-mono text-zinc-500">
                   <tr>
                     <th className="px-4 py-3">Brand</th>
@@ -422,7 +422,7 @@ export function ConfigurationStudio() {
             <form onSubmit={async (e) => {
                 e.preventDefault();
                 await mutate('/api/entities/leaves', 'POST', leaveForm, 'Leave added');
-            }} className="grid grid-cols-2 gap-2.5 text-xs">
+            }} className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
               <CustomSelect value={leaveForm.employeeId} onChange={(v) => setLeaveForm({ ...leaveForm, employeeId: v })} options={employeeOptions}/>
               <CustomDatePicker value={leaveForm.date} onChange={(d) => setLeaveForm({ ...leaveForm, date: d })}/>
               <CustomSelect value={leaveForm.type} onChange={(v) => setLeaveForm({ ...leaveForm, type: v })} options={[
@@ -461,7 +461,7 @@ export function ConfigurationStudio() {
                 const ok = await mutate('/api/entities/holidays', 'POST', { ...holidayForm, isPublicHoliday: true }, 'Public holiday added');
                 if (ok)
                     setHolidayForm({ ...holidayForm, name: '' });
-            }} className="flex flex-wrap gap-2.5 text-xs">
+            }} className="flex flex-col sm:flex-row sm:flex-wrap gap-2.5 text-xs">
               <CustomDatePicker value={holidayForm.date} onChange={(d) => setHolidayForm({ ...holidayForm, date: d })}/>
               <input required placeholder="Holiday Name" value={holidayForm.name} onChange={(e) => setHolidayForm({ ...holidayForm, name: e.target.value })} className="flex-1 px-3 py-2 rounded-md bg-white border border-zinc-300 text-zinc-900"/>
               <button type="submit" className="px-4 py-2 rounded-md bg-zinc-950 hover:bg-zinc-800 text-white font-medium cursor-pointer">
@@ -489,7 +489,7 @@ export function ConfigurationStudio() {
         </div>)}
 
       {/* TAB 5: PODS & LEADS */}
-      {tab === 'PODS' && (<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {tab === 'PODS' && (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {data.pods.map((pod) => {
                 const podEmps = data.employees.filter((e) => e.podId === pod.id);
                 const podBrands = data.brands.filter((b) => b.podId === pod.id);

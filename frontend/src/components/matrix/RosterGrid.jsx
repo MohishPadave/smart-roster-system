@@ -91,14 +91,14 @@ export function RosterGrid() {
                     const emp = row.original;
                     const pod = podMap.get(emp.podId);
                     const isLead = pod?.podLeadId === emp.id;
-                    return (<div className="min-w-[195px] pr-2">
+                    return (<div className="min-w-[126px] sm:min-w-[165px] lg:min-w-[195px] pr-1.5 sm:pr-2">
               <div className="flex items-center gap-1.5">
-                <span className="text-xs font-semibold text-zinc-950 truncate max-w-[135px]">{emp.name}</span>
-                {isLead && (<span className="text-[9px] font-mono px-1 py-0.2 rounded bg-zinc-950 text-white">
+                <span className="text-[11px] sm:text-xs font-semibold text-zinc-950 truncate max-w-[92px] sm:max-w-[135px]">{emp.name}</span>
+                {isLead && (<span className="text-[8px] sm:text-[9px] font-mono px-1 py-0.2 rounded bg-zinc-950 text-white shrink-0">
                     LEAD
                   </span>)}
               </div>
-              <div className="flex items-center gap-1.5 mt-0.5 text-[10px] font-mono text-zinc-500">
+              <div className="flex items-center gap-1 sm:gap-1.5 mt-0.5 text-[9px] sm:text-[10px] font-mono text-zinc-500">
                 <span>{pod?.name.replace('Pod ', '')}</span>
                 <span>/</span>
                 <span>
@@ -123,7 +123,7 @@ export function RosterGrid() {
                             rest++;
                     }
                     const pct = Math.round((work / Math.max(1, dates.length)) * 100);
-                    return (<div className="font-mono text-[10px] text-center min-w-[44px]">
+                    return (<div className="font-mono text-[10px] text-center min-w-[36px] sm:min-w-[44px]">
               <div className="text-zinc-900 font-semibold tabular-nums">{pct}%</div>
               <div className="text-zinc-500 tabular-nums">{rest}R</div>
             </div>);
@@ -175,11 +175,15 @@ export function RosterGrid() {
     if (lens === 'BRAND') {
         const empMap = new Map(employees.map((e) => [e.id, e]));
         return (<div className="bg-white border border-zinc-200 rounded-lg overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="lg:hidden px-3 py-1.5 bg-zinc-50 border-b border-zinc-200 text-[10px] font-mono text-zinc-500 flex items-center justify-between">
+          <span>Brand × Process Matrix</span>
+          <span>Swipe horizontally →</span>
+        </div>
+        <div className="overflow-x-auto max-h-[68vh] sm:max-h-[72vh]">
           <table className="w-full border-collapse text-left">
             <thead>
               <tr className="bg-zinc-50 border-b border-zinc-200">
-                <th className="sticky left-0 z-20 bg-zinc-50 px-4 py-3 text-[11px] font-mono uppercase text-zinc-500 min-w-[230px] border-r border-zinc-200">
+                <th className="sticky left-0 z-20 bg-zinc-50 px-2.5 sm:px-4 py-2.5 sm:py-3 text-[10px] sm:text-[11px] font-mono uppercase text-zinc-500 min-w-[148px] sm:min-w-[195px] lg:min-w-[230px] border-r border-zinc-200">
                   Brand × Process (Demand)
                 </th>
                 {dates.map((d) => {
@@ -197,15 +201,15 @@ export function RosterGrid() {
                 const brand = brandMap.get(rule.brandId) || rule.brand;
                 const pod = brand ? podMap.get(brand.podId) : null;
                 return (<tr key={rule.id} className="hover:bg-zinc-50 transition-colors">
-                    <td className="sticky left-0 z-10 bg-white px-4 py-2.5 border-r border-zinc-200">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-semibold text-zinc-950">{brand?.name}</span>
-                        <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200">
+                    <td className="sticky left-0 z-10 bg-white px-2.5 sm:px-4 py-2 sm:py-2.5 border-r border-zinc-200">
+                      <div className="flex flex-wrap items-center justify-between gap-1 sm:gap-2">
+                        <span className="text-[11px] sm:text-xs font-semibold text-zinc-950">{brand?.name}</span>
+                        <span className="font-mono text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-200">
                           {rule.process}
                         </span>
                       </div>
-                      <div className="flex items-center gap-1.5 mt-1 text-[10px] font-mono text-zinc-500">
-                        <span>{pod?.name}</span>
+                      <div className="flex flex-wrap items-center gap-1 mt-1 text-[9px] sm:text-[10px] font-mono text-zinc-500">
+                        <span>{pod?.name?.replace('Pod ', '')}</span>
                         <span>/</span>
                         <span>{rule.operatingCalendar}</span>
                         <span>/</span>
@@ -341,17 +345,17 @@ export function RosterGrid() {
                         }
                     }
                 }
-                return (<div key={emp.id} className="bg-white border border-zinc-200 rounded-lg p-4 space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded bg-zinc-950 text-white flex items-center justify-center font-mono text-xs font-semibold">
+                return (<div key={emp.id} className="bg-white border border-zinc-200 rounded-lg p-3.5 sm:p-4 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-8 h-8 rounded bg-zinc-950 text-white flex items-center justify-center font-mono text-xs font-semibold shrink-0">
                     {emp.name
                         .split(' ')
                         .map((n) => n[0])
                         .join('')}
                   </div>
-                  <div>
-                    <div className="text-sm font-semibold text-zinc-950 flex items-center gap-2">
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-zinc-950 flex flex-wrap items-center gap-1.5 sm:gap-2">
                       <span>{emp.name}</span>
                       <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-700">
                         {pod?.name}
@@ -410,12 +414,16 @@ export function RosterGrid() {
     }
     // ========== LENS 1 & 2: COMPANY-WIDE & POD-WISE ==========
     return (<div className="bg-white border border-zinc-200 rounded-lg overflow-hidden">
-      <div className="overflow-x-auto max-h-[72vh]">
+      <div className="lg:hidden px-3 py-1.5 bg-zinc-50 border-b border-zinc-200 text-[10px] font-mono text-zinc-500 flex items-center justify-between">
+        <span>Tap any cell to edit or simulate</span>
+        <span>Swipe horizontally →</span>
+      </div>
+      <div className="overflow-x-auto max-h-[68vh] sm:max-h-[72vh]">
         <table className="w-full border-collapse text-left">
           <thead className="sticky top-0 z-30 bg-zinc-50 border-b border-zinc-200">
             {table.getHeaderGroups().map((hg) => (<tr key={hg.id}>
-                {hg.headers.map((header, idx) => (<th key={header.id} className={`py-2.5 px-1.5 text-[11px] font-mono uppercase text-zinc-500 ${idx === 0
-                    ? 'sticky left-0 z-40 bg-zinc-50 pl-4 border-r border-zinc-200'
+                {hg.headers.map((header, idx) => (<th key={header.id} className={`py-2 sm:py-2.5 px-1 sm:px-1.5 text-[10px] sm:text-[11px] font-mono uppercase text-zinc-500 ${idx === 0
+                    ? 'sticky left-0 z-40 bg-zinc-50 pl-2.5 sm:pl-4 border-r border-zinc-200'
                     : idx === 1
                         ? 'bg-zinc-50 border-r border-zinc-200'
                         : ''}`}>
@@ -426,7 +434,7 @@ export function RosterGrid() {
           <tbody className="divide-y divide-zinc-200">
             {table.getRowModel().rows.map((row) => (<tr key={row.id} className="hover:bg-zinc-50/80 transition-colors group">
                 {row.getVisibleCells().map((cell, idx) => (<td key={cell.id} className={`py-1.5 px-1 ${idx === 0
-                    ? 'sticky left-0 z-20 bg-white group-hover:bg-zinc-50 pl-4 border-r border-zinc-200'
+                    ? 'sticky left-0 z-20 bg-white group-hover:bg-zinc-50 pl-2.5 sm:pl-4 border-r border-zinc-200'
                     : idx === 1
                         ? 'border-r border-zinc-200'
                         : ''}`}>
@@ -436,12 +444,12 @@ export function RosterGrid() {
           </tbody>
           <tfoot className="sticky bottom-0 z-30 bg-zinc-950 border-t-2 border-zinc-950 text-white">
             <tr>
-              <td colSpan={2} className="sticky left-0 z-40 bg-zinc-950 px-4 py-3 border-r border-zinc-800">
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-white text-zinc-950 font-mono text-[11px] font-bold tracking-wider uppercase">
+              <td colSpan={2} className="sticky left-0 z-40 bg-zinc-950 px-2.5 sm:px-4 py-2.5 sm:py-3 border-r border-zinc-800">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2">
+                  <span className="px-1.5 sm:px-2 py-0.5 rounded bg-white text-zinc-950 font-mono text-[9px] sm:text-[11px] font-bold tracking-wider uppercase w-fit">
                     DAILY HEADCOUNT
                   </span>
-                  <span className="font-mono text-[10px] text-zinc-400">
+                  <span className="font-mono text-[9px] sm:text-[10px] text-zinc-400">
                     Active / Req
                   </span>
                 </div>
