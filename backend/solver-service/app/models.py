@@ -89,7 +89,7 @@ class SolveRequest(BaseModel):
     allocations: List[EmployeeAllocationInput]
     leaves: List[LeaveRequestInput]
     holidays: List[HolidayInput]
-    time_limit_seconds: int = Field(default=300, ge=10, le=1800)
+    time_limit_seconds: int = Field(default=15, ge=2, le=1800)
 
 
 class ShiftAssignment(BaseModel):
@@ -146,7 +146,7 @@ class ReoptimizeRequest(BaseModel):
     allocations: List[EmployeeAllocationInput]
     leaves: List[LeaveRequestInput]
     holidays: List[HolidayInput]
-    time_limit_seconds: int = Field(default=180, ge=10, le=1800)
+    time_limit_seconds: int = Field(default=15, ge=2, le=1800)
 
 
 class ReoptimizeResponse(BaseModel):

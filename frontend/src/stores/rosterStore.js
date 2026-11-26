@@ -137,10 +137,10 @@ export const useRosterStore = create((set, get) => ({
             const res = await fetch('/api/roster/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ monthKey, timeLimitSeconds: 120 }),
+                body: JSON.stringify({ monthKey, timeLimitSeconds: 8 }),
             });
-            const data = await res.json();
-            if (res.status === 422 || !data.success) {
+            const data = await res.json().catch(() => ({}));
+            if (res.status === 422 || (res.ok && !data.success)) {
                 set({
                     generating: false,
                     unsatisfiableCore: data.unsatisfiable_core || [],
@@ -151,6 +151,9 @@ export const useRosterStore = create((set, get) => ({
                     },
                 });
                 return;
+            }
+            if (!res.ok) {
+                throw new Error(data.error || `Roster generation failed (${res.status})`);
             }
             await get().fetchRosterData(monthKey);
             set({
@@ -333,11 +336,11 @@ export const useRosterStore = create((set, get) => ({
                     commit: false,
                 }),
             });
-            const data = await res.json();
+            const data = await res.json().catch(() => ({}));
             if (!res.ok || !data.success) {
                 set({
                     simulating: false,
-                    toast: { type: 'error', message: data.error || 'No feasible backup cascade found' },
+                    toast: { type: 'error', message: data.error || `No feasible backup cascade found (${res.status})` },
                 });
                 return;
             }

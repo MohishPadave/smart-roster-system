@@ -1,5 +1,6 @@
 """Minimal-Perturbation Disruption Solver for roster reoptimization."""
 
+import os
 import time
 from datetime import datetime
 from typing import List, Dict, Set, Tuple
@@ -224,7 +225,12 @@ class ReoptimizeSolver:
             self.add_capacity_constraints()
             self.add_perturbation_penalty()
 
-            self.solver.parameters.max_time_in_seconds = self.request.time_limit_seconds
+            effective_limit = float(self.request.time_limit_seconds)
+            if os.environ.get("VERCEL"):
+                effective_limit = min(effective_limit, 8.0)
+                self.solver.parameters.num_search_workers = 4
+            self.solver.parameters.max_time_in_seconds = effective_limit
+            self.solver.parameters.relative_gap_limit = 0.01
             self.solver.parameters.log_search_progress = False
 
             status = self.solver.Solve(self.model)
@@ -243,7 +249,7 @@ class ReoptimizeSolver:
                     backup_candidates=backup_candidates,
                     cascade_diff=cascade_diff,
                     perturbation_count=perturbation_count,
-                    objective_score=self.solver.ObjectiveValue() if status == cp_model.OPTIMAL else None,
+                    objective_score=self.solver.ObjectiveValue(),
                     solver_duration_ms=solver_duration_ms,
                 )
 

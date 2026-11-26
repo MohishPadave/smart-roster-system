@@ -1,5 +1,6 @@
 """Deterministic CP-SAT Solver for roster generation."""
 
+import os
 import time
 from datetime import datetime, timedelta
 from typing import List, Dict, Set, Tuple, Optional
@@ -314,8 +315,13 @@ class RosterSolver:
             self.add_weekly_off_constraints()
             self.add_soft_constraints()
 
-            # Set solver parameters
-            self.solver.parameters.max_time_in_seconds = self.request.time_limit_seconds
+            # Set solver parameters (serverless-safe caps prevent 504 gateway timeouts)
+            effective_limit = float(self.request.time_limit_seconds)
+            if os.environ.get("VERCEL"):
+                effective_limit = min(effective_limit, 8.0)
+                self.solver.parameters.num_search_workers = 4
+            self.solver.parameters.max_time_in_seconds = effective_limit
+            self.solver.parameters.relative_gap_limit = 0.01
             self.solver.parameters.log_search_progress = False
 
             # Solve (without assumptions API)
@@ -326,7 +332,7 @@ class RosterSolver:
             if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
                 # Extract solution
                 shift_assignments = self._extract_solution()
-                objective_score = self.solver.ObjectiveValue() if status == cp_model.OPTIMAL else None
+                objective_score = self.solver.ObjectiveValue()
 
                 return SolveResponse(
                     success=True,

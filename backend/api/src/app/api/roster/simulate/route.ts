@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       allocations: solverData.allocations,
       leaves: solverData.leaves,
       holidays: solverData.holidays,
-      time_limit_seconds: 180,
+      time_limit_seconds: process.env.VERCEL ? 8 : 30,
     });
 
     if (!reoptimizeResponse.success) {

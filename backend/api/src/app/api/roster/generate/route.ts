@@ -15,7 +15,7 @@ export const maxDuration = 60;
 
 const GenerateRequestSchema = z.object({
   monthKey: z.string().regex(/^\d{4}-\d{2}$/),
-  timeLimitSeconds: z.number().int().min(10).max(1800).optional(),
+  timeLimitSeconds: z.number().int().min(2).max(1800).optional(),
 });
 
 /**
@@ -120,26 +120,30 @@ export async function POST(request: NextRequest) {
     // Load all data
     const solverData = await loadSolverData(monthKey);
 
-    // Run SPOF audit first
-    const spofAudit = await callSpofAudit({
-      month_key: monthKey,
-      employees: solverData.employees,
-      brand_process_rules: solverData.brandProcessRules,
-      allocations: solverData.allocations,
-      leaves: solverData.leaves,
-      holidays: solverData.holidays,
-    });
+    const effectiveTimeLimit = process.env.VERCEL
+      ? Math.min(timeLimitSeconds || 8, 8)
+      : (timeLimitSeconds || 15);
 
-    // Run solver
-    const solveResponse = await callSolve({
-      month_key: monthKey,
-      employees: solverData.employees,
-      brand_process_rules: solverData.brandProcessRules,
-      allocations: solverData.allocations,
-      leaves: solverData.leaves,
-      holidays: solverData.holidays,
-      time_limit_seconds: timeLimitSeconds || 300,
-    });
+    // Run SPOF audit and CP-SAT solver in parallel to minimize serverless latency
+    const [spofAudit, solveResponse] = await Promise.all([
+      callSpofAudit({
+        month_key: monthKey,
+        employees: solverData.employees,
+        brand_process_rules: solverData.brandProcessRules,
+        allocations: solverData.allocations,
+        leaves: solverData.leaves,
+        holidays: solverData.holidays,
+      }),
+      callSolve({
+        month_key: monthKey,
+        employees: solverData.employees,
+        brand_process_rules: solverData.brandProcessRules,
+        allocations: solverData.allocations,
+        leaves: solverData.leaves,
+        holidays: solverData.holidays,
+        time_limit_seconds: effectiveTimeLimit,
+      }),
+    ]);
 
     if (!solveResponse.success) {
       // Solver failed - return diagnostics
