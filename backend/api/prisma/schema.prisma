@@ -1,0 +1,235 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleType {
+  DEDICATED
+  SHARED
+  FLOAT_BACKUP
+}
+
+enum Process {
+  CS
+  ACC
+  NDR
+  RETENTION
+}
+
+enum OperatingCalendar {
+  ALL_365
+  EXCL_PH
+  EXCL_SUN_PH
+}
+
+enum AssignmentType {
+  PRIMARY
+  SECONDARY_BACKUP
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum LeaveType {
+  APPROVED_LEAVE
+  COMP_OFF
+}
+
+enum RosterStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum ShiftCode {
+  W        // Working
+  WO       // Weekly Off
+  PH       // Public Holiday
+  AL       // Approved Leave
+  CO       // Comp Off
+  BK       // Backup (working on another brand/process)
+}
+
+model Pod {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  podLeadId   String?    // nullable - will be set after employees are created
+  podLead     Employee?  @relation("PodLead", fields: [podLeadId], references: [id], onDelete: SetNull)
+  employees   Employee[] @relation("PodEmployees")
+  brands      Brand[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Employee {
+  id                   String               @id @default(cuid())
+  name                 String
+  email                String               @unique
+  podId                String
+  pod                  Pod                  @relation("PodEmployees", fields: [podId], references: [id], onDelete: Cascade)
+  roleType             RoleType
+  preferredWeeklyOff   Int                  @default(0) // 0=Sunday, 1=Monday, ..., 6=Saturday
+  maxDailyCapacity     Float                @default(1.0) // FTE capacity (1.0 = full day)
+  processSkillTags     Process[]
+  isActive             Boolean              @default(true)
+  allocations          EmployeeAllocation[]
+  leaveRequests        LeaveRequest[]
+  shiftEntries         ShiftEntry[]
+  ledPods              Pod[]                @relation("PodLead")
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+
+  @@index([podId])
+  @@index([email])
+}
+
+model Brand {
+  id              String              @id @default(cuid())
+  name            String
+  podId           String
+  pod             Pod                 @relation(fields: [podId], references: [id], onDelete: Cascade)
+  accountTier     String              @default("Standard") // e.g., "Premium", "Standard", "Basic"
+  isActive        Boolean             @default(true)
+  processRules    BrandProcessRule[]
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@unique([name, podId])
+  @@index([podId])
+}
+
+model BrandProcessRule {
+  id                 String               @id @default(cuid())
+  brandId            String
+  brand              Brand                @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  process            Process
+  operatingCalendar  OperatingCalendar
+  minHeadcount       Int                  @default(1)
+  isActive           Boolean              @default(true)
+  allocations        EmployeeAllocation[]
+  shiftEntries       ShiftEntry[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  @@unique([brandId, process])
+  @@index([brandId])
+}
+
+model EmployeeAllocation {
+  id                 String           @id @default(cuid())
+  employeeId         String
+  employee           Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  brandProcessRuleId String
+  brandProcessRule   BrandProcessRule @relation(fields: [brandProcessRuleId], references: [id], onDelete: Cascade)
+  assignmentType     AssignmentType
+  allocationWeight   Float            @default(1.0) // 1.0 = full-time, 0.5 = half-time
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@unique([employeeId, brandProcessRuleId])
+  @@index([employeeId])
+  @@index([brandProcessRuleId])
+}
+
+model LeaveRequest {
+  id         String      @id @default(cuid())
+  employeeId String
+  employee   Employee    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date       DateTime    @db.Date
+  type       LeaveType
+  status     LeaveStatus @default(APPROVED)
+  reason     String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([employeeId])
+  @@index([date])
+}
+
+model HolidayCalendar {
+  id              String   @id @default(cuid())
+  date            DateTime @unique @db.Date
+  name            String
+  isPublicHoliday Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([date])
+}
+
+model RosterVersion {
+  id                String        @id @default(cuid())
+  monthKey          String        @unique // e.g., "2026-11"
+  status            RosterStatus  @default(DRAFT)
+  objectiveScore    Float?
+  solverDurationMs  Int?
+  auditLogs         Json?         // JSON array of audit log entries
+  shiftEntries      ShiftEntry[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([monthKey])
+  @@index([status])
+}
+
+model ShiftEntry {
+  id                 String            @id @default(cuid())
+  rosterVersionId    String
+  rosterVersion      RosterVersion     @relation(fields: [rosterVersionId], references: [id], onDelete: Cascade)
+  employeeId         String
+  employee           Employee          @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date               String            // "YYYY-MM-DD" format
+  shiftCode          ShiftCode
+  brandProcessRuleId String?
+  brandProcessRule   BrandProcessRule? @relation(fields: [brandProcessRuleId], references: [id], onDelete: SetNull)
+  isLocked           Boolean           @default(false)
+  notes              String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  @@unique([rosterVersionId, employeeId, date])
+  @@index([rosterVersionId])
+  @@index([employeeId])
+  @@index([date])
+}
+
+enum UserRole {
+  ADMIN
+  OPS_MANAGER
+  POD_LEAD
+}
+
+model User {
+  id           String               @id @default(cuid())
+  email        String               @unique
+  name         String
+  role         UserRole             @default(POD_LEAD)
+  passwordHash String
+  resetTokens  PasswordResetToken[]
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  @@index([email])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([token])
+}
